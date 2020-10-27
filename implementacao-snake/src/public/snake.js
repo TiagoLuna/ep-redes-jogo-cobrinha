@@ -1,4 +1,6 @@
 // eslint-disable-next-line no-undef
+
+// responsável pela conexão do socket
 const socket = io(document.URL);
 socket.on('connect', () => {
     console.log('> Connected to server');
@@ -10,17 +12,21 @@ socket.on('disconnect', () => {
     }
 });
 
+// instancia o jogo para iniciá-lo na página html
 const screen = document.getElementById('screen');
 const context = screen.getContext('2d');
 let game;
 let currentPlayer;
 
+// código do socket para a página html
 socket.on('bootstrap', (gameInitialState) => {
     game = gameInitialState;
     currentPlayer = game.players[game.players.findIndex(player => player.id === socket.id)]
 
     requestAnimationFrame(renderGame);
 
+    // renderização do jogo e definição das cores de background, das cobrinhas
+    // e das frutinhas
     function renderGame() {
         context.globalAlpha = 1;
         context.clearRect(0, 0, screen.width, screen.height);
@@ -56,6 +62,7 @@ socket.on('bootstrap', (gameInitialState) => {
         requestAnimationFrame(renderGame);
     }
 
+    // função para atualizar o placar da quantidade de frutinhas já comidas
     function updateScoreTable() {
         const scoreTable = document.getElementById('score');
         const maxResults = 10;

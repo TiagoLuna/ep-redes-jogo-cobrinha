@@ -1,3 +1,5 @@
+// camada que faz a conexão com o servidor da aplicação
+
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -18,7 +20,7 @@ app.use(cors);
 
 const logOnline = () => console.log('> ONLINE NOW: ' + online);
 
-//setInterval(logOnline, 30000)
+// array para contar a quantidade de jogadores no jogo e de frutas comidas
 
 let game = {
     players: [],
@@ -28,6 +30,7 @@ let online = game.players.length;
 
 setInterval(addFruit, 6000);
 
+// função que adiciona fruta aleatoriamente por tempo
 function addFruit() {
     if (game.fruits.length < 7) {
         game.fruits.push({
@@ -48,6 +51,7 @@ function addFruit() {
     }
 }
 
+// conexão com o socket
 io.on('connection', socket => {
     console.log("\x1b[33m", '> ' + socket.id + ' = CONNECT', "\x1b[0m");
     game.players.push({
@@ -77,6 +81,8 @@ io.on('connection', socket => {
 
     socket.on('playerMove', keyPressed => newMovement(keyPressed));
 
+    // função para definir os movimentos aceitos no jogo
+    // utilizando o nome das teclas
     function newMovement(moveData) {
         switch (moveData) {
             case "ArrowUp":
